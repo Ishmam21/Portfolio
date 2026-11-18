@@ -23,7 +23,7 @@ export function ProjectsGallery({ children }: { children: ReactNode }) {
       let trigger: ScrollTrigger | undefined;
 
       const sync = () => {
-        if (overflow() > 0 && panel.offsetHeight <= window.innerHeight - 64 + 1) {
+        if (overflow() > 0 && panel.offsetHeight <= window.innerHeight + 1) {
           if (!animation) {
             viewport.dataset.horizontal = "";
             animation = gsap.context(() => {
@@ -34,7 +34,7 @@ export function ProjectsGallery({ children }: { children: ReactNode }) {
                   id: "projects-gallery",
                   trigger: root,
                   pin: panel,
-                  start: "top 64px",
+                  start: "top top",
                   end: () => `+=${overflow()}`,
                   scrub: true,
                   invalidateOnRefresh: true,
@@ -52,6 +52,35 @@ export function ProjectsGallery({ children }: { children: ReactNode }) {
         }
       };
 
+      const scrollToCard = (card: HTMLElement) => {
+        if (!trigger) return;
+        const distance = gsap.utils.clamp(1, Math.max(1, overflow() - 1), card.offsetLeft);
+        trigger.scroll(trigger.start + distance);
+        ScrollTrigger.update();
+      };
+
+      const cardFromHash = (hash: string) => {
+        const card = document.getElementById(hash.slice(1));
+        return card && track.contains(card) && card.matches(".project-card") ? card : null;
+      };
+
+      const revealHash = () => {
+        const card = cardFromHash(window.location.hash);
+        if (card) scrollToCard(card);
+      };
+
+      const openCard = (event: MouseEvent) => {
+        if (!trigger || event.defaultPrevented || event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        const link = (event.target as Element).closest<HTMLAnchorElement>('a[href^="#project-"]');
+        const card = link && cardFromHash(link.hash);
+        if (!card) return;
+
+        event.preventDefault();
+        if (window.location.hash !== link.hash) history.pushState(null, "", link.hash);
+        scrollToCard(card);
+        card.focus({ preventScroll: true });
+      };
+
       let focusFrame = 0;
       const revealFocusedCard = (event: FocusEvent) => {
         const card = (event.target as HTMLElement).closest<HTMLElement>(".project-card");
@@ -67,9 +96,7 @@ export function ProjectsGallery({ children }: { children: ReactNode }) {
             && bounds.top >= 64 && bounds.bottom <= window.innerHeight
           ) return;
 
-          const distance = gsap.utils.clamp(1, Math.max(1, overflow() - 1), card.offsetLeft);
-          trigger.scroll(trigger.start + distance);
-          ScrollTrigger.update();
+          scrollToCard(card);
         });
       };
 
@@ -79,10 +106,16 @@ export function ProjectsGallery({ children }: { children: ReactNode }) {
       observer.observe(track);
       window.addEventListener("resize", sync);
       track.addEventListener("focusin", revealFocusedCard);
+      document.addEventListener("click", openCard);
+      window.addEventListener("hashchange", revealHash);
       sync();
+      const hashFrame = requestAnimationFrame(revealHash);
 
       return () => {
+        cancelAnimationFrame(hashFrame);
         cancelAnimationFrame(focusFrame);
+        document.removeEventListener("click", openCard);
+        window.removeEventListener("hashchange", revealHash);
         observer.disconnect();
         window.removeEventListener("resize", sync);
         track.removeEventListener("focusin", revealFocusedCard);
@@ -95,5 +128,5 @@ export function ProjectsGallery({ children }: { children: ReactNode }) {
     return () => media.revert();
   }, []);
 
-  return <section ref={section} id="projects" className="projects" aria-labelledby="projects-title">{children}</section>;
+  return <section ref={section} id="projects" tabIndex={-1} className="projects" aria-labelledby="projects-title">{children}</section>;
 }
