@@ -1,20 +1,20 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { portfolio } from "../content";
+import { headlinePaths, headlineCursor, headlineWidth } from "./banner-art";
+import { PixelText } from "./pixel-text";
 
 function TypedText({ text }: { text: string }) {
   return (
     <>
       <span className="sr-only">{text}</span>
       <span aria-hidden="true">
-        {text.split(/(\s+)/).map((word, wordIndex) => (
+        {text.split(/(\s+)/).map((word, wordIndex) => /^\s+$/.test(word) ? word : (
           <span className="type-word" key={wordIndex}>
-            {Array.from(word).map((character, characterIndex) => (
-              <span className="type-character" data-character key={characterIndex}>
-                {character}
-              </span>
+            {Array.from(word).map((character, index) => (
+              <span className="type-character" data-letter key={index}>{character}</span>
             ))}
           </span>
         ))}
@@ -25,93 +25,69 @@ function TypedText({ text }: { text: string }) {
 
 export function Hero() {
   const root = useRef<HTMLElement>(null);
+  const played = useRef(false);
 
-  useEffect(() => {
-    const characters = Array.from(
-      root.current?.querySelectorAll<HTMLElement>("[data-character]") ?? [],
-    );
-    if (!characters.length) return;
-
-    const showAll = () => {
-      characters.forEach((character) => {
-        character.style.removeProperty("opacity");
-        character.removeAttribute("data-cursor");
-      });
-    };
+  useLayoutEffect(() => {
     const media = gsap.matchMedia();
-
     media.add("(prefers-reduced-motion: no-preference)", () => {
-      let tween: gsap.core.Tween | undefined;
-      let watchdog: ReturnType<typeof setTimeout> | undefined;
-      try {
-        const progress = { count: 0 };
-        let revealed = 0;
-        gsap.set(characters, { opacity: 0 });
-        characters[0].setAttribute("data-cursor", "before");
-
-        tween = gsap.to(progress, {
-          count: characters.length,
-          duration: characters.length * 0.012,
-          ease: "none",
-          snap: { count: 1 },
-          onUpdate: () => {
-            const count = Math.min(characters.length, progress.count);
-            if (count === revealed) return;
-            characters[Math.max(0, revealed - 1)].removeAttribute("data-cursor");
-            for (let i = revealed; i < count; i++) {
-              characters[i].style.opacity = "1";
-            }
-            revealed = count;
-            if (count > 0) characters[count - 1].setAttribute("data-cursor", "after");
-          },
-          onComplete: showAll,
-          onInterrupt: showAll,
-        });
-        watchdog = setTimeout(() => {
-          tween?.kill();
-          showAll();
-        }, characters.length * 12 + 800);
-      } catch {
-        tween?.kill();
-        showAll();
+      if (!root.current) return;
+      const glyphs = Array.from(root.current.querySelectorAll<SVGGElement>("[data-glyph]"));
+      const letters = Array.from(root.current.querySelectorAll<HTMLElement>("[data-letter]"));
+      const cursor = root.current.querySelector<SVGRectElement>(".headline-cursor");
+      const lastLetter = letters.at(-1);
+      if (!cursor || !lastLetter) return;
+      if (played.current) {
+        lastLetter.setAttribute("data-cursor", "");
+        return () => lastLetter.removeAttribute("data-cursor");
       }
 
-      return () => {
-        clearTimeout(watchdog);
-        showAll();
-      };
-    });
+      const timeline = gsap.timeline({ onComplete: () => { played.current = true; } });
+      gsap.set([...glyphs, ...letters], { opacity: 0 });
+      gsap.set(cursor, { opacity: 1, attr: { x: 0 } });
 
-    return () => {
-      media.revert();
-      showAll();
-    };
+      glyphs.forEach((glyph, index) => {
+        timeline.set(glyph, { opacity: 1 }, 0.045 + index * 0.055)
+          .set(cursor, { attr: { x: headlineCursor[index] } }, 0.045 + index * 0.055);
+      });
+
+      let active: HTMLElement | undefined;
+      const clearCursor = () => active?.removeAttribute("data-cursor");
+      timeline.set(cursor, { opacity: 0 }, 0.39);
+      letters.forEach((letter, index) => {
+        const time = 0.39 + index * 0.008;
+        timeline.set(letter, { opacity: 1 }, time).call(() => {
+          clearCursor();
+          active = letter;
+          letter.setAttribute("data-cursor", "");
+        }, [], time);
+      });
+
+      return clearCursor;
+    }, root);
+
+    return () => media.revert();
   }, []);
 
   return (
     <section className="hero" ref={root} aria-labelledby="hero-title">
-      <div className="hero-topline" aria-hidden="true">
-        <span className="hero-label"><span className="status-indicator" />Personal portfolio</span>
-      </div>
-
       <div className="hero-body">
-        <svg className="terminal-prompt" width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true">
-          <path d="m7 9 9 9-9 9M21 27h9" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
-        </svg>
-        <div className="hero-copy">
-          <p className="hero-greeting">Hello, I’m</p>
-          <h1 id="hero-title"><TypedText text={portfolio.name} /></h1>
-          <p className="hero-role"><TypedText text={portfolio.role} /></p>
-          <p className="hero-intro"><TypedText text={portfolio.introduction} /></p>
-        </div>
+        <div className="hero-squares" aria-hidden="true"><i /><i /><i /></div>
+        <h1 id="hero-title">
+          <span className="sr-only">{portfolio.wordmark}</span>
+          <svg className="headline" viewBox={`0 0 ${headlineWidth} 90`} shapeRendering="crispEdges" aria-hidden="true">
+            {headlinePaths.map((path, index) => (
+              <g key={index} data-glyph>
+                <path d={path} fill="var(--shadow)" transform="translate(6 6)" />
+                <path d={path} fill="var(--ink)" />
+              </g>
+            ))}
+            <rect className="headline-cursor blink" x={headlineCursor.at(-1)} width="36" height="84" fill="var(--accent)" />
+          </svg>
+        </h1>
+        <p className="hero-role"><TypedText text={portfolio.role} /></p>
+        <p className="hero-intro"><TypedText text={portfolio.introduction} /></p>
       </div>
-
-      <div className="hero-bottomline" aria-hidden="true">
-        <span>Software <span className="topic-divider">/</span> Machine learning <span className="topic-divider">/</span> AI</span>
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-          <path d="M5 2H2v14h3m8-14h3v14h-3M7 9h4" stroke="currentColor" />
-        </svg>
-      </div>
+      <div className="hero-bottomline"><PixelText text={portfolio.topics} /></div>
     </section>
   );
 }
