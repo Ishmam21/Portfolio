@@ -28,11 +28,14 @@ const logos: Record<string, PixelLayer[]> = {
     { fill: "#e1b55e", d: "M7 5h2v8H7z" },
     { fill: "#68bf8e", d: "M10 7h2v6h-2z" },
   ],
+  NestJS: [
+    { fill: "#ea2858", d: "M2 6h2V3h2v2h2V2h2v2h2v1h2v2h1v3h-1v2h-2v2H7v-1h3v-2H8v-1h4V8h-2V7H8v2H6v1H3V9H1V7h1z M10 6v1h1V6z" },
+  ],
   FastAPI: [
     { fill: "#38b8a7", d: "M4 0h8v1h2v2h1v2h1v6h-1v2h-1v2h-2v1H4v-1H2v-2H1v-2H0V5h1V3h1V1h2z" },
     { fill: "#e6edf3", d: "M8 2h3v2h-1v2h3v2h-2v2H9v2H7v2H5v-3h1V9H3V7h2V5h2V3h1z" },
   ],
-  "C#": [
+  "ASP.NET Core": [
     { fill: "#9475cf", d: "M6 1h4v1h2v1h2v2h1v6h-1v2h-2v1h-2v1H6v-1H4v-1H2v-2H1V5h1V3h2V2h2z" },
     { fill: "#e6edf3", d: "M5 5h4v1H6v4h3v1H5v-1H4V6h1z M10 6h1v1h1V6h1v1h1v1h-1v1h1v1h-1v1h-1v-1h-1v1h-1v-1H9V9h1V8H9V7h1z M11 8v1h1V8z" },
   ],
@@ -65,6 +68,10 @@ const logos: Record<string, PixelLayer[]> = {
   ],
   PyTorch: [
     { fill: "#ee6c4d", d: "M11 1h2v2h-2z M6 3h2v2H6z M4 5h2v2H4z M3 7h2v4H3z M4 11h2v2H4z M6 13h5v2H6z M11 11h2v2h-2z M13 7h2v4h-2z M11 6h2v2h-2z" },
+  ],
+  LangGraph: [
+    { fill: "#3b8d76", d: "M7 4h2v4h4v4h-2v-2H5v2H3V8h4z" },
+    { fill: "#8fc9af", d: "M6 1h4v4H6z M2 11h4v4H2z M10 11h4v4h-4z" },
   ],
   LangChain: [
     { fill: "#8fc9af", d: "M4 2h6v2h2v4h-2V5H5v1H3v4h3v2H2v-2H1V5h3z M10 4h4v2h1v5h-3v3H6v-2H4V8h2v3h5v-1h2V6h-3z" },

@@ -10,7 +10,7 @@ export const skillCategories: SkillCategory[] = [
   },
   {
     label: "BACKEND",
-    tools: ["FastAPI", "C#", "ASP.NET Core", "EF Core"],
+    tools: ["FastAPI", "ASP.NET Core", "NestJS"],
   },
   {
     label: "FRONTEND",
@@ -22,6 +22,6 @@ export const skillCategories: SkillCategory[] = [
   },
   {
     label: "LEARNING",
-    tools: ["PyTorch", "retrieval-augmented generation (RAG)", "Chroma"],
+    tools: ["PyTorch", "Chroma", "LangGraph"],
   },
 ];
