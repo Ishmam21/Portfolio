@@ -3,7 +3,7 @@ import { portfolio } from "./content";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: `${portfolio.name} | Portfolio`,
+  title: "Ishmam Portfolio",
   description: `${portfolio.role}. ${portfolio.introduction}`,
 };
 
