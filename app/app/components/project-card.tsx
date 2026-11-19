@@ -22,9 +22,9 @@ export function ProjectCard({ project }: { project: Project }) {
         <ul className="tags" aria-label="Tech stack">{stack.map((item) => <li key={item}>{item}</li>)}</ul>
         {(github || live || docs) && (
           <div className="project-links">
-            {github && <a href={github} aria-label={`${title} on GitHub`}>GitHub ↗</a>}
-            {live && <a href={live} aria-label={`${title} live demo`}>Live demo ↗</a>}
-            {docs && <a href={docs} aria-label={`${title} API docs`}>API docs ↗</a>}
+            {github && <a href={github} target="_blank" rel="noopener noreferrer" aria-label={`${title} on GitHub`}>GitHub ↗</a>}
+            {live && <a href={live} target="_blank" rel="noopener noreferrer" aria-label={`${title} live demo`}>Live demo ↗</a>}
+            {docs && <a href={docs} target="_blank" rel="noopener noreferrer" aria-label={`${title} API docs`}>API docs ↗</a>}
           </div>
         )}
       </div>

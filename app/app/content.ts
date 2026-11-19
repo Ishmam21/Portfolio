@@ -12,9 +12,10 @@ export const portfolio = {
     { label: "Education", href: "#education" },
     { label: "Contact", href: "#contact" },
   ],
-  about: "I’m a final-year Computer Science and Engineering student at American International University-Bangladesh. I have hands-on experience with C# and .NET, including building and deploying Seatz, a reservation app built with ASP.NET Core, Entity Framework Core, and PostgreSQL. I’m now exploring Python for applied AI and machine learning, with an interest in building tools that work with data and language models. During my internship at OddFlock, I built a Python pipeline that turned news stories into ready-to-publish posters.",
+  about: "I’m a final-year Computer Science and Engineering student at American International University-Bangladesh. I have hands-on experience with C# and .NET, including building and deploying Seatz, a reservation app built with ASP.NET Core, Entity Framework Core, and PostgreSQL. My current focus is applied AI and machine learning with Python. I built a prediction model with scikit-learn, served it through FastAPI, and built a chatbot with LangChain. During my internship at OddFlock, I built a Python pipeline that turned news stories into ready-to-publish posters.",
   experience: {
     company: "OddFlock",
+    website: "https://odd-flock.com",
     role: "Software Engineer Intern",
     dates: "May–September 2026",
     summary: "I built a Python pipeline that gathered news from RSS feeds and Twitter/X, ranked stories with a language model, and turned each selected story into a ready-to-publish image poster.",

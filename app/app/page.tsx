@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { ContactLinks } from "./components/contact-links";
 import { EducationTimeline } from "./components/education-timeline";
 import { Hero } from "./components/hero";
@@ -44,13 +45,27 @@ export default function Home() {
             <div className="experience-entry">
               <p className="experience-meta">{portfolio.experience.dates} · Part-time</p>
               <h3>{portfolio.experience.role}</h3>
-              <p className="experience-company">{portfolio.experience.company}</p>
+              <a className="experience-company" href={portfolio.experience.website} target="_blank" rel="noopener noreferrer">
+                <Image src="/oddflock.png" alt="" width={44} height={44} />
+                {portfolio.experience.company}
+              </a>
               <p>{portfolio.experience.summary}</p>
             </div>
           </section>
           <section id="education" tabIndex={-1} className="content-section" aria-labelledby="education-title">
             <h2 id="education-title"><PixelText text="Education" /></h2>
-            <EducationTimeline />
+            <EducationTimeline>
+              <ol>
+                {portfolio.education.map((entry) => (
+                  <li className="education-step" key={entry.qualification}>
+                    <span className="education-marker" aria-hidden="true" />
+                    {"date" in entry && <time dateTime={entry.date}>{entry.label}</time>}
+                    <h3>{entry.qualification}</h3>
+                    {"institution" in entry && <p>{entry.institution}</p>}
+                  </li>
+                ))}
+              </ol>
+            </EducationTimeline>
           </section>
           <section id="contact" tabIndex={-1} className="content-section" aria-labelledby="contact-title">
             <h2 id="contact-title"><PixelText text="Contact" /></h2>

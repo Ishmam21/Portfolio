@@ -1,11 +1,10 @@
 "use client";
 
-import { useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useRef, type ReactNode } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { portfolio } from "../content";
 
-export function EducationTimeline() {
+export function EducationTimeline({ children }: { children: ReactNode }) {
   const root = useRef<HTMLDivElement>(null);
   const rail = useRef<HTMLSpanElement>(null);
 
@@ -69,16 +68,7 @@ export function EducationTimeline() {
   return (
     <div className="education-timeline" ref={root}>
       <span className="education-rail" ref={rail} aria-hidden="true" />
-      <ol>
-        {portfolio.education.map((entry) => (
-          <li className="education-step" key={entry.qualification}>
-            <span className="education-marker" aria-hidden="true" />
-            {"date" in entry && <time dateTime={entry.date}>{entry.label}</time>}
-            <h3>{entry.qualification}</h3>
-            {"institution" in entry && <p>{entry.institution}</p>}
-          </li>
-        ))}
-      </ol>
+      {children}
     </div>
   );
 }
