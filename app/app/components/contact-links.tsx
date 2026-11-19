@@ -48,17 +48,23 @@ export function ContactLinks() {
 
   return (
     <ul className="contact-links" ref={root}>
-      {portfolio.contact.map(({ icon, name, handle, href }) => (
+      {portfolio.contact.map(({ icon, name, href }) => (
         <li key={icon}>
-          {icon === "email" ? (
-            <a className="contact-email" href={href}>{handle}</a>
-          ) : (
-            <a className={`contact-social contact-${icon}`} href={href} aria-label={name}>
-              <svg viewBox="0 0 24 24" shapeRendering="crispEdges" aria-hidden="true">
+          <a className={`contact-social contact-${icon}`} href={href} aria-label={icon === "email" ? "Email Fahim" : name}>
+            <svg viewBox="0 0 24 24" shapeRendering="crispEdges" aria-hidden="true">
+              {icon === "email" ? (
+                <>
+                  <path fill="#4285f4" d="M2 6h4v13H2z" />
+                  <path fill="#34a853" d="M18 6h4v13h-4z" />
+                  <path fill="#ea4335" d="M2 4h3v2h2v2h2v2h2v2h2v-2h2V8h2V6h2V4h3v4h-2v2h-2v2h-2v2h-2v2h-4v-2H8v-2H6v-2H4V8H2z" />
+                  <path fill="#fbbc04" d="M18 6h4v4h-2v1h-2z" />
+                </>
+              ) : (
                 <path d={iconPaths[icon]} fill="currentColor" fillRule="evenodd" />
-              </svg>
-            </a>
-          )}
+              )}
+            </svg>
+            <span className="contact-label">{icon === "email" ? "Email" : name}</span>
+          </a>
         </li>
       ))}
     </ul>

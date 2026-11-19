@@ -70,12 +70,12 @@ export function EducationTimeline() {
     <div className="education-timeline" ref={root}>
       <span className="education-rail" ref={rail} aria-hidden="true" />
       <ol>
-        {portfolio.education.map(({ qualification, institution, date, label }) => (
-          <li className="education-step" key={qualification}>
+        {portfolio.education.map((entry) => (
+          <li className="education-step" key={entry.qualification}>
             <span className="education-marker" aria-hidden="true" />
-            <time dateTime={date}>{label}</time>
-            <h3>{qualification}</h3>
-            <p>{institution}</p>
+            {"date" in entry && <time dateTime={entry.date}>{entry.label}</time>}
+            <h3>{entry.qualification}</h3>
+            {"institution" in entry && <p>{entry.institution}</p>}
           </li>
         ))}
       </ol>

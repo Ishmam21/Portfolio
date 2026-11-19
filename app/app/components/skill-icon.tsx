@@ -36,6 +36,14 @@ const logos: Record<string, PixelLayer[]> = {
     { fill: "#9475cf", d: "M6 1h4v1h2v1h2v2h1v6h-1v2h-2v1h-2v1H6v-1H4v-1H2v-2H1V5h1V3h2V2h2z" },
     { fill: "#e6edf3", d: "M5 5h4v1H6v4h3v1H5v-1H4V6h1z M10 6h1v1h1V6h1v1h1v1h-1v1h1v1h-1v1h-1v-1h-1v1h-1v-1H9V9h1V8H9V7h1z M11 8v1h1V8z" },
   ],
+  CSS: [
+    { fill: "#4a9fe5", d: "M2 1h12l-1 12-5 2-5-2z" },
+    { fill: "#e6edf3", d: "M5 4h7v2H7v2h4v2H7v1h3v-1h2v2l-4 1-3-1v-2h2v1h2v-1H5z" },
+  ],
+  JavaScript: [
+    { fill: "#f7df1e", d: "M1 1h14v14H1z" },
+    { fill: "#0d1117", d: "M7 5h2v6H8v2H5v-1H4v-2h2v1h1z M11 5h3v1h-3v2h3v4h-1v1h-3v-1h-1v-1h2v1h1v-2h-2V9H9V6h1V5z" },
+  ],
   TypeScript: [
     { fill: "#3178c6", d: "M1 1h14v14H1z" },
     { fill: "#e6edf3", d: "M3 6h6v2H7v5H5V8H3z M10 6h4v1h-3v2h3v4h-4v-1h3v-2h-3z" },
@@ -51,9 +59,12 @@ const logos: Record<string, PixelLayer[]> = {
     { fill: "#6eadd7", d: "M4 2h9v1h2v7h-2v2h-2v3H8v-1H7v-3H4v-1H2V4h2z" },
     { fill: "#e6edf3", d: "M4 3h8v1h2v5h-2v2h-2v3H8v-4H5V9H3V5h1z M4 5v4h2v1h3v3h1v-3h2V9h1V4H5v1z M6 6h1v1H6z M11 6h1v1h-1z" },
   ],
-  "SQL Server": [
+  "Microsoft SQL Server": [
     { fill: "#e46b6b", d: "M3 2h10v1h2v10h-2v1H3v-1H1V3h2z" },
     { fill: "#0d1117", d: "M3 4h10v1H3z M3 7h10v1H3z M3 10h10v1H3z" },
+  ],
+  PyTorch: [
+    { fill: "#ee6c4d", d: "M11 1h2v2h-2z M6 3h2v2H6z M4 5h2v2H4z M3 7h2v4H3z M4 11h2v2H4z M6 13h5v2H6z M11 11h2v2h-2z M13 7h2v4h-2z M11 6h2v2h-2z" },
   ],
   LangChain: [
     { fill: "#8fc9af", d: "M4 2h6v2h2v4h-2V5H5v1H3v4h3v2H2v-2H1V5h3z M10 4h4v2h1v5h-3v3H6v-2H4V8h2v3h5v-1h2V6h-3z" },

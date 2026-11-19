@@ -6,7 +6,7 @@ type SkillCategory = {
 export const skillCategories: SkillCategory[] = [
   {
     label: "AI & DATA",
-    tools: ["Python", "scikit-learn", "pandas", "NumPy", "Matplotlib"],
+    tools: ["Python", "scikit-learn", "pandas", "NumPy", "Matplotlib", "LangChain"],
   },
   {
     label: "BACKEND",
@@ -14,14 +14,14 @@ export const skillCategories: SkillCategory[] = [
   },
   {
     label: "FRONTEND",
-    tools: ["TypeScript", "Next.js", "React"],
+    tools: ["JavaScript", "TypeScript", "Next.js", "React", "CSS"],
   },
   {
     label: "DATABASES",
-    tools: ["PostgreSQL", "SQL Server"],
+    tools: ["PostgreSQL", "Microsoft SQL Server"],
   },
   {
     label: "LEARNING",
-    tools: ["LangChain", "retrieval-augmented generation (RAG)", "Chroma"],
+    tools: ["PyTorch", "retrieval-augmented generation (RAG)", "Chroma"],
   },
 ];

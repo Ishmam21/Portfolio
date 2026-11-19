@@ -3,7 +3,7 @@ export const portfolio = {
   givenNames: "FAHIM MUBARRAT",
   role: "Final-year Computer Science student at AIUB · Dhaka",
   introduction:
-    "I like knowing what happens after you click a button. That curiosity got me into backend development. These days I’m spending more time in Python, training models on real datasets and figuring out how to turn them into tools people can use.",
+    "Aspiring software engineer, full-time debugger.",
   navigation: [
     { label: "Home", href: "#home" },
     { label: "About", href: "#about" },
@@ -12,8 +12,13 @@ export const portfolio = {
     { label: "Education", href: "#education" },
     { label: "Contact", href: "#contact" },
   ],
-  about: "I like building tools around practical problems, from designing APIs and databases to experimenting with machine learning.",
-  experience: "Placeholder — add a role, organization, dates, and a short summary.",
+  about: "I’m a final-year Computer Science and Engineering student at American International University-Bangladesh. I have hands-on experience with C# and .NET, including building and deploying Seatz, a reservation app built with ASP.NET Core, Entity Framework Core, and PostgreSQL. I’m now exploring Python for applied AI and machine learning, with an interest in building tools that work with data and language models. During my internship at OddFlock, I built a Python pipeline that turned news stories into ready-to-publish posters.",
+  experience: {
+    company: "OddFlock",
+    role: "Software Engineer Intern",
+    dates: "May–September 2026",
+    summary: "I built a Python pipeline that gathered news from RSS feeds and Twitter/X, ranked stories with a language model, and turned each selected story into a ready-to-publish image poster.",
+  },
   education: [
     {
       qualification: "O-Levels",
@@ -33,6 +38,7 @@ export const portfolio = {
       date: "2027-01",
       label: "Expected January 2027",
     },
+    { qualification: "Coming soon" },
   ],
   contact: [
     { icon: "email", name: "Email", handle: "fahimishmam.fm@gmail.com", href: "mailto:fahimishmam.fm@gmail.com" },

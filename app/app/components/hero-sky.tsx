@@ -28,7 +28,7 @@ export function HeroSky() {
             .to(shootingStar, { x: width * 0.73, y: height * 0.69, duration: 0.68, ease: "none" })
             .to(shootingStar, { opacity: 1, duration: 0.13 }, 0)
             .to(shootingStar, { opacity: 0, duration: 0.24 }, 0.44);
-        }, gsap.utils.random(12000, 20000));
+        }, gsap.utils.random(1800, 4000));
       };
       const sync = () => {
         window.clearTimeout(meteorTimer);

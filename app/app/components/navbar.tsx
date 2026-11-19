@@ -21,7 +21,9 @@ export function Navbar() {
   return (
     <header className="site-header">
       <div className="header-inner">
-        <span className="pixel-square" aria-hidden="true" />
+        <svg className="nav-prompt" viewBox="0 0 16 10" shapeRendering="crispEdges" aria-hidden="true">
+          <path fill="currentColor" d="M0 0h2v2h2v2h2v2H4v2H2v2H0V8h2V6h2V4H2V2H0z M8 8h8v2H8z" />
+        </svg>
         <nav aria-label="Main navigation">
           <ul className="nav-links">
             {portfolio.navigation.map(({ label, href }) => (

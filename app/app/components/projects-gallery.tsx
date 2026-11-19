@@ -12,34 +12,81 @@ export function ProjectsGallery({ children }: { children: ReactNode }) {
     const panel = root?.querySelector<HTMLElement>(".projects-panel");
     const viewport = root?.querySelector<HTMLElement>(".projects-viewport");
     const track = root?.querySelector<HTMLElement>(".projects-track");
-    if (!root || !panel || !viewport || !track) return;
+    const progress = root?.querySelector<HTMLElement>(".projects-progress span");
+    if (!root || !panel || !viewport || !track || !progress) return;
 
     gsap.registerPlugin(ScrollTrigger);
     const media = gsap.matchMedia();
     media.add("(min-width: 960px) and (min-height: 620px) and (prefers-reduced-motion: no-preference)", () => {
       viewport.dataset.layout = "";
       const overflow = () => Math.max(0, track.scrollWidth - viewport.clientWidth);
+      const pauseDistance = () => Math.round(window.innerHeight * 0.25);
       let animation: gsap.Context | undefined;
       let trigger: ScrollTrigger | undefined;
+      let stops: { card: HTMLElement; x: number; start: number; end: number }[] = [];
+      let scrollDistance = 0;
+      let travel = 0;
 
       const sync = () => {
         if (overflow() > 0 && panel.offsetHeight <= window.innerHeight + 1) {
           if (!animation) {
             viewport.dataset.horizontal = "";
             animation = gsap.context(() => {
-              trigger = gsap.to(track, {
-                x: () => -overflow(),
+              gsap.set(track, { x: 0, force3D: true });
+              gsap.set(progress, { scaleX: 0 });
+              const setTrack = gsap.quickSetter(track, "x", "px");
+              const setProgress = gsap.quickSetter(progress, "scaleX");
+
+              const measure = () => {
+                travel = overflow();
+                const hold = pauseDistance();
+                stops = Array.from(track.querySelectorAll<HTMLElement>(".project-card")).map((card, index) => {
+                  const x = Math.min(travel, card.offsetLeft);
+                  const start = x + index * hold;
+                  return { card, x, start, end: start + hold };
+                });
+                scrollDistance = travel + stops.length * hold;
+                return `+=${scrollDistance}`;
+              };
+
+              const playhead = { progress: 0 };
+              const render = () => {
+                const distance = playhead.progress * scrollDistance;
+                let x = 0;
+                for (const stop of stops) {
+                  if (distance < stop.start) {
+                    const span = stop.x - x;
+                    const fraction = 1 - (stop.start - distance) / span;
+                    x += span * (1 - Math.cos(Math.PI * fraction)) / 2;
+                    break;
+                  }
+                  x = stop.x;
+                  if (distance <= stop.end) break;
+                }
+                setTrack(-x);
+                setProgress(travel ? x / travel : 0);
+              };
+
+              const motion = gsap.to(playhead, {
+                progress: 1,
                 ease: "none",
-                scrollTrigger: {
-                  id: "projects-gallery",
-                  trigger: root,
-                  pin: panel,
-                  start: "top top",
-                  end: () => `+=${overflow()}`,
-                  scrub: true,
-                  invalidateOnRefresh: true,
+                paused: true,
+                onUpdate: render,
+              });
+              trigger = ScrollTrigger.create({
+                animation: motion,
+                scrub: 0.22,
+                anticipatePin: 1,
+                id: "projects-gallery",
+                trigger: root,
+                pin: panel,
+                start: "top top",
+                end: measure,
+                onRefresh: (self) => {
+                  motion.progress(self.progress);
+                  render();
                 },
-              }).scrollTrigger;
+              });
             }, root);
           }
           ScrollTrigger.refresh();
@@ -53,10 +100,11 @@ export function ProjectsGallery({ children }: { children: ReactNode }) {
       };
 
       const scrollToCard = (card: HTMLElement) => {
-        if (!trigger) return;
-        const distance = gsap.utils.clamp(1, Math.max(1, overflow() - 1), card.offsetLeft);
-        trigger.scroll(trigger.start + distance);
+        const stop = stops.find((entry) => entry.card === card);
+        if (!trigger || !stop) return;
+        trigger.scroll(trigger.start + (stop.start + stop.end) / 2);
         ScrollTrigger.update();
+        trigger.getTween()?.progress(1);
       };
 
       const cardFromHash = (hash: string) => {

@@ -158,10 +158,12 @@ export function Insect() {
     <div className="insect-follow" ref={follow} aria-hidden="true">
       <div className="insect-drift" ref={drift}>
         <div className="insect-reaction" ref={reaction}>
+          <div className="insect-entrance">
           <svg viewBox={insectViewBox} shapeRendering="crispEdges">
             <path className="insect-frame" d={insectPath} fill="var(--accent)" />
             <path className="insect-frame insect-frame-raised" d={insectRaisedPath} fill="var(--accent)" />
           </svg>
+          </div>
         </div>
       </div>
     </div>

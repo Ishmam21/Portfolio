@@ -29,8 +29,8 @@ export default function Home() {
           <div className="projects-panel">
             <div className="projects-heading">
               <h2 id="projects-title"><PixelText text="Projects" /></h2>
-              <p className="scroll-hint">Scroll to browse <span aria-hidden="true">→</span></p>
             </div>
+            <div className="projects-progress" aria-hidden="true"><span /></div>
             <div className="projects-viewport">
               <div className="projects-track">
                 {projects.map((project) => <ProjectCard key={project.id} project={project} />)}
@@ -41,7 +41,12 @@ export default function Home() {
         <div className="page-content">
           <section id="experience" tabIndex={-1} className="content-section" aria-labelledby="experience-title">
             <h2 id="experience-title"><PixelText text="Experience" /></h2>
-            <p>{portfolio.experience}</p>
+            <div className="experience-entry">
+              <p className="experience-meta">{portfolio.experience.dates} · Part-time</p>
+              <h3>{portfolio.experience.role}</h3>
+              <p className="experience-company">{portfolio.experience.company}</p>
+              <p>{portfolio.experience.summary}</p>
+            </div>
           </section>
           <section id="education" tabIndex={-1} className="content-section" aria-labelledby="education-title">
             <h2 id="education-title"><PixelText text="Education" /></h2>
@@ -51,7 +56,10 @@ export default function Home() {
             <h2 id="contact-title"><PixelText text="Contact" /></h2>
             <ContactLinks />
           </section>
-          <footer><a href="#home">Back to top ↑</a></footer>
+          <footer className="site-footer">
+            <a className="footer-top" href="#home"><span className="footer-arrow" aria-hidden="true">↑</span><PixelText text="Back to top" /></a>
+            <p>© 2026 Fahim Mubarrat Ishmam <span aria-hidden="true">·</span> All rights reserved.</p>
+          </footer>
         </div>
       </main>
     </>
