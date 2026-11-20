@@ -55,6 +55,21 @@ export const projects: Project[] = [
     ],
   },
   {
+    id: "reelnotes",
+    title: "ReelNotes",
+    description: "Turns coding advice from public Instagram Reels into downloadable AGENTS.md guides with timestamped transcript evidence.",
+    stack: ["Next.js", "TypeScript", "Python", "FastAPI", "PostgreSQL", "LangChain"],
+    github: "https://github.com/Ishmam21/ReelNotes",
+    live: "https://reel-notes-ten.vercel.app/",
+    docs: "https://reelnotes-c73z.onrender.com/docs",
+    screenshots: [
+      { src: "/projects/reelnotes/playlist-workspace.png", alt: "ReelNotes playlist with processed clips and a generated guide" },
+      { src: "/projects/reelnotes/playlist-library.png", alt: "Playlist library with a form for creating a playlist" },
+      { src: "/projects/reelnotes/guide-markdown.png", alt: "Generated AGENTS.md guide preview" },
+      { src: "/projects/reelnotes/guide-evidence.png", alt: "Guide evidence with timestamped transcript excerpts" },
+    ],
+  },
+  {
     id: "insurance-premium-predictor",
     title: "Insurance Premium Estimator",
     description: "A Next.js form and FastAPI backend that use a Random Forest classifier to predict a low, medium, or high insurance premium category.",

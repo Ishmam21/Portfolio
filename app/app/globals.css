@@ -225,10 +225,10 @@ a:hover { color: var(--accent); }
 .insect-frame { animation: insect-wave 1s step-end infinite; }
 [data-wave-paused] .insect-frame,
 .hero[data-hero-paused] .hero-caret { animation-play-state: paused; }
-.insect-frame-raised { visibility: hidden; animation-delay: -.5s; }
+.insect-frame-raised { opacity: 0; animation-delay: -.5s; }
 @keyframes insect-wave {
-  0% { visibility: visible; }
-  50% { visibility: hidden; }
+  0% { opacity: 1; }
+  50% { opacity: 0; }
 }
 
 .hero-bottomline, .content-section, .projects-panel, footer {
