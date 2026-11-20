@@ -61,7 +61,7 @@ export function SkillsMenu() {
     const schedule = () => {
       window.clearTimeout(timer);
       if (!visible || document.hidden || !motion.matches || menu.matches(":hover, :focus-within")) return;
-      timer = window.setTimeout(() => setSelected((current) => (current + 1) % skillCategories.length), 4500);
+      timer = window.setTimeout(() => setSelected((current) => (current + 1) % skillCategories.length), 3000);
     };
     const observer = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
