@@ -2,6 +2,7 @@
 
 import type { MouseEvent } from "react";
 import { portfolio } from "../content";
+import { scrollToTop } from "./back-to-top";
 import { PixelText } from "./pixel-text";
 
 function navigate(event: MouseEvent<HTMLAnchorElement>) {
@@ -27,7 +28,7 @@ export function Navbar() {
         <nav aria-label="Main navigation">
           <ul className="nav-links">
             {portfolio.navigation.map(({ label, href }) => (
-              <li key={href}><a href={href} onClick={navigate}><PixelText text={label} /></a></li>
+              <li key={href}><a href={href} onClick={href === "#home" ? scrollToTop : navigate}><PixelText text={label} /></a></li>
             ))}
           </ul>
         </nav>

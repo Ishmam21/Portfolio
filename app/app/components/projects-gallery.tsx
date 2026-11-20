@@ -17,12 +17,13 @@ export function ProjectsGallery({ children }: { children: ReactNode }) {
 
     gsap.registerPlugin(ScrollTrigger);
     const media = gsap.matchMedia();
+    let trigger: ScrollTrigger | undefined;
+    let revealProjectHash: (() => void) | undefined;
     media.add("(min-width: 960px) and (min-height: 620px) and (prefers-reduced-motion: no-preference)", () => {
       viewport.dataset.layout = "";
       const overflow = () => Math.max(0, track.scrollWidth - viewport.clientWidth);
       const pauseDistance = () => Math.round(window.innerHeight * 0.25);
       let animation: gsap.Context | undefined;
-      let trigger: ScrollTrigger | undefined;
       let stops: { card: HTMLElement; x: number; start: number; end: number }[] = [];
       let scrollDistance = 0;
       let travel = 0;
@@ -117,6 +118,8 @@ export function ProjectsGallery({ children }: { children: ReactNode }) {
         if (card) scrollToCard(card);
       };
 
+      revealProjectHash = revealHash;
+
       const openCard = (event: MouseEvent) => {
         if (!trigger || event.defaultPrevented || event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
         const link = (event.target as Element).closest<HTMLAnchorElement>('a[href^="#project-"]');
@@ -157,10 +160,9 @@ export function ProjectsGallery({ children }: { children: ReactNode }) {
       document.addEventListener("click", openCard);
       window.addEventListener("hashchange", revealHash);
       sync();
-      const hashFrame = requestAnimationFrame(revealHash);
 
       return () => {
-        cancelAnimationFrame(hashFrame);
+        revealProjectHash = undefined;
         cancelAnimationFrame(focusFrame);
         document.removeEventListener("click", openCard);
         window.removeEventListener("hashchange", revealHash);
@@ -168,12 +170,98 @@ export function ProjectsGallery({ children }: { children: ReactNode }) {
         window.removeEventListener("resize", sync);
         track.removeEventListener("focusin", revealFocusedCard);
         animation?.revert();
+        trigger = undefined;
         delete viewport.dataset.layout;
         delete viewport.dataset.horizontal;
       };
     }, root);
 
-    return () => media.revert();
+    const scrollKey = "portfolio:reload-scroll";
+    const saveScroll = () => {
+      const top = window.scrollY;
+      let afterProjects: number | undefined;
+      let galleryProgress: number | undefined;
+      if (trigger && top >= trigger.start) {
+        if (top > trigger.end) afterProjects = top - trigger.end;
+        else galleryProgress = (top - trigger.start) / (trigger.end - trigger.start);
+      }
+
+      try {
+        sessionStorage.setItem(scrollKey, JSON.stringify({
+          url: window.location.href,
+          top,
+          afterProjects,
+          galleryProgress,
+        }));
+      } catch {
+        // Keep native scroll restoration when storage is blocked.
+      }
+    };
+    let savedWhileHidden = false;
+    const saveOnHide = () => {
+      savedWhileHidden = document.hidden;
+      if (savedWhileHidden) saveScroll();
+    };
+    const saveOnLeave = () => {
+      if (!savedWhileHidden) saveScroll();
+    };
+    document.addEventListener("visibilitychange", saveOnHide);
+    window.addEventListener("pagehide", saveOnLeave);
+
+    const navigation = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
+    const isReload = navigation ? navigation.type === "reload" : performance.navigation?.type === 1;
+    let restoreFrame = 0;
+
+    const restoreScroll = () => {
+      let saved: { url: string; top: number; afterProjects?: number; galleryProgress?: number } | null = null;
+      if (isReload) {
+        try {
+          saved = JSON.parse(sessionStorage.getItem(scrollKey) ?? "null");
+          sessionStorage.removeItem(scrollKey);
+        } catch {
+          // A saved position is optional.
+        }
+      }
+
+      if (saved?.url === window.location.href && Number.isFinite(saved.top)) {
+        let top = saved.top;
+        if (trigger && typeof saved.afterProjects === "number") {
+          top = trigger.end + saved.afterProjects;
+        } else if (trigger && typeof saved.galleryProgress === "number") {
+          top = trigger.start + saved.galleryProgress * (trigger.end - trigger.start);
+        }
+        window.scrollTo({ top, behavior: "instant" });
+        return;
+      }
+
+      const target = document.getElementById(window.location.hash.slice(1));
+      if (trigger && target?.matches("section") && (root.compareDocumentPosition(target) & Node.DOCUMENT_POSITION_FOLLOWING)) {
+        // The browser may have followed the link before the pin added its spacer.
+        target.scrollIntoView({ behavior: "instant", block: "start" });
+        return;
+      }
+
+      revealProjectHash?.();
+    };
+
+    const scheduleRestore = () => {
+      restoreFrame = requestAnimationFrame(restoreScroll);
+    };
+    // A reload can restore scroll against the unpinned page during loading.
+    // Apply the saved position after the browser finishes that restoration.
+    if (isReload && document.readyState !== "complete") {
+      window.addEventListener("pageshow", scheduleRestore, { once: true });
+    } else {
+      scheduleRestore();
+    }
+
+    return () => {
+      window.removeEventListener("pageshow", scheduleRestore);
+      cancelAnimationFrame(restoreFrame);
+      window.removeEventListener("pagehide", saveOnLeave);
+      document.removeEventListener("visibilitychange", saveOnHide);
+      media.revert();
+    };
   }, []);
 
   return <section ref={section} id="projects" tabIndex={-1} className="projects" aria-labelledby="projects-title">{children}</section>;

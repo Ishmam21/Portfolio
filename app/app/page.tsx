@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { BackToTop } from "./components/back-to-top";
 import { ContactLinks } from "./components/contact-links";
 import { EducationTimeline } from "./components/education-timeline";
 import { Hero } from "./components/hero";
@@ -72,7 +73,7 @@ export default function Home() {
             <ContactLinks />
           </section>
           <footer className="site-footer">
-            <a className="footer-top" href="#home"><span className="footer-arrow" aria-hidden="true">↑</span><PixelText text="Back to top" /></a>
+            <BackToTop />
             <p>© 2026 Fahim Mubarrat Ishmam <span aria-hidden="true">·</span> All rights reserved.</p>
           </footer>
         </div>
